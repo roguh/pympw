@@ -4,7 +4,7 @@ Master Password is a determnistic password generator.
 This is a Python implementation of the Master Password algorithm v3 based on 
 [mpw-js](https://github.com/tmthrgd/mpw-js).
 
-**This code is for demonstration purposes only.** I faithfully implemented the algorithm for a favorite password manager in a few dozen lines of Python! If you want to use a reliable deterministic password manager, get one at [masterpassword.app](http://masterpassword.app).
+I faithfully implemented the [algorithm](http://www.masterpasswordapp.com/masterpassword-algorithm.pdf) for a cool password manager in a few dozen lines of Python. Please note **this code is for demonstration purposes only.** If you want to use a reliable deterministic password manager, get one at [masterpassword.app](http://masterpassword.app).
 
 ## CLI Usage
 ```
@@ -38,14 +38,14 @@ site=google.com, type=long, counter=20000
 Vode7.QojfDeqa
 ```
 
-Enter interactive mode. Type `CTRL-D` or `quit` to quit.
+Enter interactive mode by omitting the `--site` argument. Type `CTRL-D` or `quit` to quit.
 
 ```
- $ python3 cli.py -n USER
+ $ ./cli.py -n USER
 please type your master password >
 please type site name > google.com
-please type counteror ENTER for default=1 > 20000
-please type typeor ENTER for default=Long > long
+please type counter or ENTER for default=1 > 20000
+please type type or ENTER for default=long >
 Vode7.QojfDeqa
 please type site name > quit
 bye
@@ -56,12 +56,26 @@ Enter alternative interactive mode
 ```
  $ python3 cli.py -n USER -b/
 please type your master password >
-please type site name[/type[/counter]] > google.com/l/20000
-Vode7.QojfDeqa
+please type site name[/type[/counter]] > google.com
+Kasi2/FipsHonm
+please type site name[/type[/counter]] > google.com/pin
+7002
+please type site name[/type[/counter]] > google.com/medium/3
+Wap4/Voy
 please type site name[/type[/counter]] >
 ```
 
 Use `--copy` to copy password to clipboard.
+
+```
+$ ./cli.py -n USER --copy --type x
+please type your master password >
+please type site name > github.com
+please type counter or ENTER for default=1 >
+please type type or ENTER for default=x >
+password copied to clipboard
+```
+
 Use `--exit-after` to shutdown interactive mode after some number of seconds.
 
 ## Library Usage
