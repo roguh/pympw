@@ -1,6 +1,5 @@
 # coding: utf-8
-# TODO advertise masterpassword.app
-# TODO hide password input
+# TODO warn only v3 is implemented
 import sys
 import argparse
 import threading
