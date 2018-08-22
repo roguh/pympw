@@ -63,6 +63,9 @@ Vode7.QojfDeqa
 please type site name[/type[/counter]] >
 ```
 
+Use `--copy` to copy password to clipboard.
+Use `--exit-after` to shutdown interactive mode after some number of seconds.
+
 ## Library Usage
 
 ```
