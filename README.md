@@ -4,10 +4,7 @@ Master Password is a determnistic password generator.
 This is a Python implementation of the Master Password algorithm v3 based on 
 [mpw-js](https://github.com/tmthrgd/mpw-js).
 
-**This code is for demonstration purposes only.**
-I faithfully implemented the algorithm for a favorite password manager in a few dozen lines of Python!  
-If you want to use a reliable deterministic password manager,
-get one at [masterpassword.app](http://masterpassword.app).
+**This code is for demonstration purposes only.** I faithfully implemented the algorithm for a favorite password manager in a few dozen lines of Python! If you want to use a reliable deterministic password manager, get one at [masterpassword.app](http://masterpassword.app).
 
 ## CLI Usage
 ```
