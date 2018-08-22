@@ -1,10 +1,12 @@
 # master\_password.py: An Algorithm for Freedom
 
 Master Password is a determnistic password generator.
-This is a Python implementation of the Master Password algorithm based on 
+This is a Python implementation of the Master Password algorithm v3 based on 
 [mpw-js](https://github.com/tmthrgd/mpw-js).
 
-[masterpassword.app](masterpassword.app)
+This code is for demonstration purposes only. 
+If you want to use a reliable password manager (that can be implemented in a few lines of Python),
+go to [masterpassword.app](http://masterpassword.app).
 
 ## Usage
 
@@ -15,8 +17,8 @@ This is a Python implementation of the Master Password algorithm based on
 See all template classes available 
 
 ```
-> list(template_classes.keys())
-['Maximum', 'Long', 'Medium', 'Short', 'Basic', 'PIN', 'Name', 'Phrase']
+> template_classes.keys()
+dict_keys(['Maximum', 'Long', 'Medium', 'Short', 'Basic', 'PIN', 'Name', 'Phrase'])
 ```
 
 Generate a master key (>1sec)
