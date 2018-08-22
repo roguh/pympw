@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # coding: utf-8
 # TODO warn only v3 is implemented
 import sys
@@ -13,7 +14,7 @@ import master_password
 
 
 default_counter = 1
-default_type = 'Long'
+default_type = 'long'
 help_cmds = ['?', 'help']
 quit_cmds = ['quit']
 
