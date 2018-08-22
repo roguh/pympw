@@ -21,7 +21,7 @@ import struct
 # TODO other scopes
 scope = b"com.lyndir.masterpassword"
 
-# TODO DOC 
+# TODO DOC
 N, r, p, dk_len = 32768, 8, 2, 64
 
 
@@ -76,6 +76,7 @@ tmp = tuple(template_classes.items())
 for k, v in tmp:
     template_classes[synonyms[k]] = v
 
+
 def int2bytes(n):
     # TODO DOC
     # TODO ensure 4 bytes
@@ -94,9 +95,9 @@ def len2bytes(s):
 def master_key(name, master_pw, scope=scope, N=N, r=r, p=p, dk_len=dk_len, enc='utf8'):
     # TODO DOC
     if type(name) is str:
-        name = bytes(name, enc) 
+        name = bytes(name, enc)
     if type(master_pw) is str:
-        master_pw = bytes(master_pw, enc) 
+        master_pw = bytes(master_pw, enc)
     salt = seed = b''.join([scope, len2bytes(name), name])
     return scrypt.hash(password=master_pw, salt=salt, N=N, r=r, p=p, buflen=dk_len)
 
@@ -105,7 +106,8 @@ def site_key(site_name, master_key, counter=1, enc='utf8', scope=scope):
     # TODO DOC
     if type(site_name) is str:
         site_name = bytes(site_name, enc)
-    site_seed = b''.join([scope, len2bytes(site_name), site_name, int2bytes(counter)])
+    site_seed = b''.join([scope, len2bytes(site_name),
+                          site_name, int2bytes(counter)])
     return hmac.digest(key=master_key, msg=site_seed, digest=hashlib.sha256)
 
 
@@ -116,7 +118,7 @@ def site_password(site_name, master_key, template_class="Long", counter=1):
     template_class = template_classes[template_class]
     template = template_class[seed[0] % len(template_class)]
 
-    password = ''.join([char_classes[c][seed[i + 1] % len(char_classes[c])] 
-                       for i, c in enumerate(template)])
+    password = ''.join([char_classes[c][seed[i + 1] % len(char_classes[c])]
+                        for i, c in enumerate(template)])
 
     return password
