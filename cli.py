@@ -1,29 +1,33 @@
 # coding: utf-8
-# TODO copy to clipboard
-# TODO tab/space/slash separated site/type or site/type/counter
-
+# TODO advertise masterpassword.app
+# TODO hide password input
 import sys
 import argparse
 import threading 
 import time
 import os
+import getpass
+
+import pyperclip
 
 import mpw
 
 
 default_counter = 1
 default_type = 'Long'
+help_cmds = ['?', 'help']
 
 
 def main():
     # TODO DOC
-    parser = argparse.ArgumentParser(description='TODO')
-    parser.add_argument('--name', type=str, default=None, help='your full name')
-    parser.add_argument('--site', type=str, default=None, help='site name (e.g. linux.org)')
-    parser.add_argument('--counter', type=int, default=default_counter, help='positive integer less than 2**31=TODO')
+    parser = argparse.ArgumentParser(description='Passwords are generated locally, your master password is not sent to any server. http://masterpassword.app')
+    parser.add_argument('--name', '-n', type=str, default=None, help='your full name')
+    parser.add_argument('--site', '-s', type=str, default=None, help='site name (e.g. linux.org). omit this argument to start an interactive session.')
+    parser.add_argument('--counter', '-c', type=int, default=default_counter, help='positive integer less than 2**31=TODO')
     parser.add_argument('--type', type=str, default=default_type, choices=mpw.template_classes.keys(), help='password type')
-    parser.add_argument('--copy', type=bool, default=False, help='copy password to clipboard instead of printing it')
-    parser.add_argument('--exit-after', type=int, default=None, help='close script after this many seconds')
+    parser.add_argument('--copy', '-y', action='store_true', help='copy password to clipboard instead of printing it')
+    parser.add_argument('--splitby', '-b', type=str, default=None, help="more efficient interactive session. suggested values: tab, space, or '/'")
+    parser.add_argument('--exit-after', '-e', type=int, default=None, help='close script after this many seconds')
 
     # read site, counter, and type until quit
     args = parser.parse_args(sys.argv[1:])
@@ -32,7 +36,7 @@ def main():
     try:
         if args.name is None:
             args.name = input('please type your full name > ')
-        master_password = input('please type your master password > ')
+        master_password = getpass.getpass('please type your master password > ')
     except (EOFError, KeyboardInterrupt, ValueError) as e:
         sys.exit(1)
 
@@ -70,21 +74,47 @@ def main():
             p.start()
 
         def get(name, default):
-            x = input('please type {} or ENTER for default={} > '.format(name, default))
+            x = input('please type {}{} > '.format(name, '' if default == '' else 'or ENTER for default={}'.format(default)))
+            if x.lower() in help_cmds:
+                parser.print_help()
+                return default
             return x if x != '' else default
         try:
             # TODO DOC
+            sb = args.splitby
             while True:
-                site = input('site name > ')
+                if not sb is None and len(sb) > 0 and not sb in ['\n']:
+                    inputs = input('please type site name[{}type[{}counter]] > '.format(sb, sb))
+                    # TODO DOC
+                    if inputs in help_cmds:
+                        parser.print_help()
+                        inputs = '' 
+                    # TODO DOC
+                    inputs = inputs.split(sb)
+                    site = inputs[0] if len(inputs) > 0 else ''
+                    _type = inputs[1] if len(inputs) > 1 else args.type 
+                    counter = inputs[2] if len(inputs) > 2 else args.counter 
+                else:
+                    # TODO DOC
+                    site = get('site name', '')
+                    counter = get('counter', args.counter)
+                    _type = get('type', args.type)
+
+                # TODO DOC
                 if site == '':
                     print('please enter a valid site name')
                     continue
-                counter = get('counter', args.counter)
                 counter = int(counter)
-                _type = get('type', args.type)
 
                 # print site password
-                print(mpw.site_password(site, key, _type, counter)) 
+                password = mpw.site_password(site, key, _type, counter)
+
+                # TODO DOC
+                if args.copy:
+                    pyperclip.copy(password)
+                    print('password copied to clipboard')
+                else:
+                    print(password)
         except (EOFError, KeyboardInterrupt, ValueError):
             print('\nbye')
             if not p is None:
