@@ -1,31 +1,31 @@
-""" TODO add more types and synonyms:
-    TODO update descriptions...
-  x, maximum  | 20 characters, contains symbols.
-  l, long     | Copy-friendly, 14 characters, symbols.
-  m, medium   | Copy-friendly, 8 characters, symbols.
-  b, basic    | 8 characters, no symbols.
-  s, short    | Copy-friendly, 4 characters, no symbols.
-  i, pin      | 4 numbers.
-  n, name     | 9 letter name.
-  p, phrase   | 20 character sentence.
-  K, key      | encryption key (512 bit or -P bits).
-  B, longbasic | ...
-"""
+"""These functions implement the Master Password algorithm v3.
+
+How to use:
+
+1. Call master_key() once with a name and a master password
+2. View available password templates in template_classes
+3. Pass key, site name, counter, and password template class to site_password()
+""" 
 import scrypt
 import hmac
 import hashlib
 import struct
 # TODO implement MP algorithm v0 v1 v2
 
-# authentication scope
-# TODO other scopes
+# Only use authentication scope
 scope = b"com.lyndir.masterpassword"
 
-# TODO DOC
+# TODO Support other scopes
+identification_scope = b"com.lyndir.masterpassword.login"
+answer_scope = b"com.lyndir.masterpassword.answer"
+
+
+# SCRYPT parameters for the Master Password algorithm v3 
 N, r, p, dk_len = 32768, 8, 2, 64
 
 
-# TODO DOC
+# Characters in each character class of a template class
+# Example: "Voc" could represent "A@b" or "I[x"
 char_classes = {
     "V": "AEIOU",
     "C": "BCDFGHJKLMNPQRSTVWXYZ",
@@ -41,7 +41,7 @@ char_classes = {
 }
 
 
-# TODO DOC
+# All possible password templates
 template_classes = {
     "maximum": ["anoxxxxxxxxxxxxxxxxx", "axxxxxxxxxxxxxxxxxno"],
     "long": ["CvcvnoCvcvCvcv", "CvcvCvcvnoCvcv", "CvcvCvcvCvcvno",
@@ -60,6 +60,7 @@ template_classes = {
     "phrase": ["cvcc cvc cvccvcv cvc", "cvc cvccvcvcv cvcv", "cv cvccv cvc cvcvccv"]
 }
 
+# Short names for each password template name
 synonyms = {
     "maximum": "x",
     "long": "l",
@@ -76,24 +77,24 @@ tmp = tuple(template_classes.items())
 for k, v in tmp:
     template_classes[synonyms[k]] = v
 
+template_class_names = sum([[k, v] for k, v in synonyms.items()], [])
 
 def int2bytes(n):
-    # TODO DOC
-    # TODO ensure 4 bytes
+    """Convert a positive 4 byte integer into a big-endian 4-byte array"""
     if n < 1 or n > 4294967295:
         raise Exception("ERROR!")
     # big-endian integer
-    # TODO make sure it's 4 bytes
+    # TODO how to make sure it's 4 bytes?
     return struct.pack('>i', n)
 
 
 def len2bytes(s):
-    # TODO DOC
+    """Convert the length of a string into a big-endian 4-byte array""" 
     return int2bytes(len(s))
 
 
 def master_key(name, master_pw, scope=scope, N=N, r=r, p=p, dk_len=dk_len, enc='utf8'):
-    # TODO DOC
+    """Time and memory intensive. Generates master key using a name and password"""
     if type(name) is str:
         name = bytes(name, enc)
     if type(master_pw) is str:
@@ -103,7 +104,7 @@ def master_key(name, master_pw, scope=scope, N=N, r=r, p=p, dk_len=dk_len, enc='
 
 
 def site_key(site_name, master_key, counter=1, enc='utf8', scope=scope):
-    # TODO DOC
+    """Quickly generate a site key using password, site name, and parameters"""
     if type(site_name) is str:
         site_name = bytes(site_name, enc)
     site_seed = b''.join([scope, len2bytes(site_name),
@@ -112,7 +113,9 @@ def site_key(site_name, master_key, counter=1, enc='utf8', scope=scope):
 
 
 def site_password(site_name, master_key, template_class="Long", counter=1):
-    # TODO DOC
+    """Quickly generates a password for a site"""
+
+    # Use the site key to generate a password of a given template class 
     seed = site_key(site_name, master_key, counter)
 
     template_class = template_classes[template_class]
