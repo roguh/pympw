@@ -16,6 +16,7 @@ import master_password
 default_counter = 1
 default_type = 'Long'
 help_cmds = ['?', 'help']
+quit_cmds = ['quit']
 
 
 def main():
@@ -44,14 +45,14 @@ def main():
     try:
         if args.name is None:
             args.name = input('please type your full name > ')
-        master_password = getpass.getpass(
+        master_pw = getpass.getpass(
             'please type your master password > ')
     except (EOFError, KeyboardInterrupt, ValueError) as e:
         sys.exit(1)
 
     # precompute master key
     # TODO DOC
-    key = master_password.master_key(args.name, master_password)
+    key = master_password.master_key(args.name, master_pw)
 
     # print site password
     # TODO DOC
@@ -90,6 +91,9 @@ def main():
             if x.lower() in help_cmds:
                 parser.print_help()
                 return default
+            if x.lower() in quit_cmds:
+                # TODO nicer
+                raise EOFError 
             return x if x != '' else default
         try:
             # TODO DOC
@@ -101,6 +105,8 @@ def main():
                     if ins in help_cmds:
                         parser.print_help()
                         ins = ''
+                    if ins in quit_cmds:
+                        break
                     # TODO DOC
                     ins = ins.split(sb)
                     site = ins[0] if len(ins) > 0 else ''
