@@ -6,6 +6,27 @@ This is a Python implementation of the Master Password algorithm v3 based on
 
 I faithfully implemented the [algorithm](http://www.masterpasswordapp.com/masterpassword-algorithm.pdf) for a cool password manager in a few dozen lines of Python. Please note **this code is for demonstration purposes only.** If you want to use a reliable deterministic password manager, get one at [masterpassword.app](http://masterpassword.app).
 
+## **Features**
+
+- ✔ Faithful and concise implementation of Master Password v3 using standard Python crypto libraries scrypt, hmac, and digest.sha256 .
+- ✔ Quick password generation for a single site.
+- ✔ Intuitive interactive session. Type your master password once and request site passwords as you go!
+- ✔ Copy passwords to your clipboard --- never print passwords out at all!
+- ✔ Interactive session can timeout after a few minutes to protect your privacy
+- ✔ Support for counter and all password template classes (maximum, long, medium, basic, short, PIN, name, and phrase)
+
+## Installation
+
+```
+git clone --depth=1 https://github.com/roguh/master_password.py
+cd master_password.py
+pip install .
+```
+
+### Dependencies
+
+If you don't want pip to install dependencies, make sure to install the Python packages `scrypt` and `pyperclip`.
+
 ## CLI Usage
 
 ### Options 
@@ -43,7 +64,7 @@ optional arguments:
   --quiet, -q           less output
 ```
 
-### Examples
+### Single site password with one command
 
 Generate a password with a single command
 
@@ -53,6 +74,8 @@ please type your master password >
 site=google.com, type=long, counter=20000
 Vode7.QojfDeqa
 ```
+
+### Interactive mode
 
 Enter interactive mode by omitting the `--site` argument. Type `CTRL-D` or `quit` to quit.
 
@@ -66,6 +89,8 @@ Vode7.QojfDeqa
 please type site name > quit
 bye
 ```
+
+### More concise interactive mode
 
 Enter alternative interactive mode
 
@@ -83,6 +108,8 @@ i%&yc(sRV7VJqOQK%G0~
 please type site name[/type[/counter]] > quit
 bye
 ```
+
+### Complete examples 
 
 Use `--copy` to copy password to clipboard.
 
@@ -115,14 +142,31 @@ bye
 ## Library Usage
 
 ```
-> from master_password import site_password, master_key, template_classes
+> from master_password import site_password, master_key, template_class_names 
 ```
 
 See all template classes available 
 
 ```
-> template_classes.keys()
-dict_keys(['maximum', 'long', 'medium', 'short', 'basic', 'pin', 'name', 'phrase'])
+> template_class_names 
+['maximum',
+ 'x',
+ 'long',
+ 'l',
+ 'medium',
+ 'm',
+ 'basic',
+ 'b',
+ 'short',
+ 's',
+ 'longbasic',
+ 'lb',
+ 'pin',
+ '#',
+ 'name',
+ 'n',
+ 'phrase',
+ 'ph']
 ```
 
 Generate a master key (>1sec)
@@ -134,6 +178,20 @@ Generate a master key (>1sec)
 Generate a password
 
 ```
-> site_password(site_name='google.com', master_key=master_key, template_class='long', counter=20000)
+> site_password(master_key=master_key, site_name='google.com', template_class='long', counter=20000)
 'Vode7.QojfDeqa'
+```
+
+## Running tests
+
+```
+$ python3 setup.py test
+============================== test session starts ===============================
+platform linux -- Python 3.7.0, pytest-3.6.4, py-1.5.4, pluggy-0.7.1
+rootdir: /home/user/sync/dev/py/MasterPassword, inifile:
+collected 3 items                                                                
+
+master_password/tests/test_master_password_v3.py ...                       [100%]
+
+============================ 3 passed in 0.62 seconds ============================
 ```
