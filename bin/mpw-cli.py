@@ -28,19 +28,19 @@ def main():
                         help='site name (e.g. linux.org). omit this argument to start an interactive session.')
     parser.add_argument('--counter', '-c', type=int, default=default_counter,
                         help='positive integer less than 2**31=4294967296')
-    parser.add_argument('--type', type=str, default=default_type,
-                        choices=mpw.template_class_names, help='password type')
+    parser.add_argument( "--quiet", "-q", action="store_true", help="less output")
     parser.add_argument('--copy', '-y', action='store_true',
                         help='copy password to clipboard instead of printing it')
     parser.add_argument('--hide-pw', '-d', action='store_true',
                         help='never print passwords')
     parser.add_argument('--splitby', '-b', type=str, default=None,
                         help="more efficient interactive session. suggested values: tab, space, or '/'")
+    parser.add_argument( "--keepalive", "-k", action="store_true", help="keep program from timing out by pressing ENTER")
     parser.add_argument('--exit-after', '-e', type=int,
                         default=None, help='script will timeout and close after this many seconds')
     parser.add_argument( "--exit-command", type=str, default=None, help="run this command if the script times out")
-    parser.add_argument( "--keepalive", "-k", action="store_true", help="keep program from timing out by pressing ENTER")
-    parser.add_argument( "--quiet", "-q", action="store_true", help="less output")
+    parser.add_argument('--type', type=str, default=default_type,
+                        choices=mpw.template_class_names, help='password type')
 
     # read site, counter, and type until quit
     args = parser.parse_args(sys.argv[1:])
