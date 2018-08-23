@@ -112,7 +112,7 @@ def site_key(site_name, master_key, counter=1, enc='utf8', scope=scope):
     return hmac.digest(key=master_key, msg=site_seed, digest=hashlib.sha256)
 
 
-def site_password(site_name, master_key, template_class="Long", counter=1):
+def site_password(site_name, master_key, template_class="long", counter=1):
     """Quickly generates a password for a site"""
 
     # Use the site key to generate a password of a given template class 
