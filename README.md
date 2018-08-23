@@ -7,10 +7,19 @@ This is a Python implementation of the Master Password algorithm v3 based on
 I faithfully implemented the [algorithm](http://www.masterpasswordapp.com/masterpassword-algorithm.pdf) for a cool password manager in a few dozen lines of Python. Please note **this code is for demonstration purposes only.** If you want to use a reliable deterministic password manager, get one at [masterpassword.app](http://masterpassword.app).
 
 ## CLI Usage
+
+### Options 
+
 ```
+$ ./cli.py -h
 usage: cli.py [-h] [--name NAME] [--site SITE] [--counter COUNTER]
-              [--type {maximum,long,medium,short,basic,longbasic,pin,name,phrase,x,l,m,s,b,lb,#,n,ph}]
-              [--copy] [--splitby SPLITBY] [--exit-after EXIT_AFTER]
+              [--type {maximum,x,long,l,medium,m,basic,b,short,s,longbasic,lb,pin,#,name,n,phrase,ph}]
+              [--copy] [--hide-pw] [--splitby SPLITBY]
+              [--exit-after EXIT_AFTER] [--exit-command EXIT_COMMAND]
+              [--keepalive] [--quiet]
+
+CLI to Master Password algorithm v3. Passwords are generated locally, your
+master password is not sent to any server. http://masterpassword.app
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -18,16 +27,23 @@ optional arguments:
   --site SITE, -s SITE  site name (e.g. linux.org). omit this argument to
                         start an interactive session.
   --counter COUNTER, -c COUNTER
-                        positive integer less than 2**31=TODO
-  --type {maximum,long,medium,short,basic,longbasic,pin,name,phrase,x,l,m,s,b,lb,#,n,ph}
+                        positive integer less than 2**31=4294967296
+  --type {maximum,x,long,l,medium,m,basic,b,short,s,longbasic,lb,pin,#,name,n,phrase,ph}
                         password type
   --copy, -y            copy password to clipboard instead of printing it
+  --hide-pw, -d         never print passwords
   --splitby SPLITBY, -b SPLITBY
                         more efficient interactive session. suggested values:
                         tab, space, or '/'
   --exit-after EXIT_AFTER, -e EXIT_AFTER
-                        close script after this many seconds
+                        script will timeout and close after this many seconds
+  --exit-command EXIT_COMMAND
+                        run this command if the script times out
+  --keepalive, -k       keep program from timing out by pressing ENTER
+  --quiet, -q           less output
 ```
+
+### Examples
 
 Generate a password with a single command
 
@@ -62,7 +78,10 @@ please type site name[/type[/counter]] > google.com/pin
 7002
 please type site name[/type[/counter]] > google.com/medium/3
 Wap4/Voy
-please type site name[/type[/counter]] >
+please type site name[/type[/counter]] > google.com/x
+i%&yc(sRV7VJqOQK%G0~
+please type site name[/type[/counter]] > quit
+bye
 ```
 
 Use `--copy` to copy password to clipboard.
@@ -77,6 +96,21 @@ password copied to clipboard
 ```
 
 Use `--exit-after` to shutdown interactive mode after some number of seconds.
+Use `--quiet` to print less output.
+Use `--keepalive` to reschedule timeout if you're still using the program.
+
+```
+$ ./cli.py --name USER --type maximum --quiet --copy --splitby / \
+    --keepalive --exit-after "$((60 * 5))" \
+    --exit-command 'notify-send "MasterPassword is now closed"'
+master password >
+site name[/type[/counter]] > google.com/l/20000
+Vode7.QojfDeqa
+site name[/type[/counter]] > google.com
+i%&yc(sRV7VJqOQK%G0~
+site name[/type[/counter]] > 300 second timeout reached
+bye
+```
 
 ## Library Usage
 
