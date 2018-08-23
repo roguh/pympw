@@ -1,4 +1,4 @@
-# master\_password.py: An Algorithm for Freedom
+# pympw: Master Password --- An Algorithm for Freedom
 
 Master Password is a determnistic password generator.
 This is a Python implementation of the Master Password algorithm v3 based on 
@@ -19,8 +19,8 @@ I faithfully implemented the [algorithm](http://www.masterpasswordapp.com/master
 ## Installation
 
 ```
-git clone --depth=1 https://github.com/roguh/master_password.py
-cd master_password.py
+git clone --depth=1 https://github.com/roguh/pympw
+cd pympw 
 pip install .
 ```
 
@@ -35,7 +35,7 @@ If you don't want pip to install dependencies, make sure to install the Python p
 Generate a password with a single command
 
 ```
-$ python3 mpw-cli.py -n USER --type long -s google.com -c 20000
+$ python3 pympw -n USER --type long -s google.com -c 20000
 please type your master password >
 site=google.com, type=long, counter=20000
 Vode7.QojfDeqa
@@ -46,7 +46,7 @@ Vode7.QojfDeqa
 Enter interactive mode by omitting the `--site` argument. Type `CTRL-D` or `quit` to quit.
 
 ```
- $ mpw-cli.py -n USER
+ $ pympw -n USER
 please type your master password >
 please type site name > google.com
 please type counter or ENTER for default=1 > 20000
@@ -61,7 +61,7 @@ bye
 Enter alternative interactive mode
 
 ```
- $ python3 mpw-cli.py -n USER -b/
+ $ python3 pympw -n USER -b/
 please type your master password >
 please type site name[/type[/counter]] > google.com
 Kasi2/FipsHonm
@@ -80,7 +80,7 @@ bye
 Use `--copy` to copy password to clipboard.
 
 ```
-$ mpw-cli.py -n USER --copy --type x
+$ pympw -n USER --copy --type x
 please type your master password >
 please type site name > github.com
 please type counter or ENTER for default=1 >
@@ -93,7 +93,7 @@ Use `--quiet` to print less output.
 Use `--keepalive` to reschedule timeout if you're still using the program.
 
 ```
-$ mpw-cli.py --name USER --type maximum --quiet --copy --splitby / \
+$ pympw --name USER --type maximum --quiet --copy --splitby / \
     --keepalive --exit-after "$((60 * 5))" \
     --exit-command 'notify-send "MasterPassword is now closed"'
 master password >
@@ -108,8 +108,8 @@ bye
 ### All options 
 
 ```
-$ mpw-cli.py -h
-usage: mpw-cli.py [-h] [--name NAME] [--site SITE] [--counter COUNTER] [--quiet]
+$ pympw -h
+usage: pympw [-h] [--name NAME] [--site SITE] [--counter COUNTER] [--quiet]
                   [--copy] [--hide-pw] [--splitby SPLITBY] [--keepalive]
                   [--exit-after EXIT_AFTER] [--exit-command EXIT_COMMAND]
                   [--type {maximum,x,long,l,medium,m,basic,b,short,s,longbasic,lb,pin,#,name,n,phrase,ph}]
@@ -143,7 +143,7 @@ optional arguments:
 ## Library Usage
 
 ```
-> from master_password import site_password, master_key, template_class_names 
+> from pympw import site_password, master_key, template_class_names 
 ```
 
 See all template classes available 
@@ -189,10 +189,15 @@ Generate a password
 $ python3 setup.py test
 ============================== test session starts ===============================
 platform linux -- Python 3.7.0, pytest-3.6.4, py-1.5.4, pluggy-0.7.1
-rootdir: /home/user/sync/dev/py/MasterPassword, inifile:
 collected 3 items                                                                
 
-master_password/tests/test_master_password_v3.py ...                       [100%]
+pympw/tests/test_master_password_v3.py ...                       [100%]
 
 ============================ 3 passed in 0.62 seconds ============================
 ```
+
+## Authors
+
+Master Password is a security product and algorithm by [Maarten Billemont](http://lhunath.com/), [Lyndir](http://www.lyndir.com/).
+
+This Python implementation was created by Hugo Rivera.

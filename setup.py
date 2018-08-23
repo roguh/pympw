@@ -4,10 +4,10 @@ def readme():
     with open('README.md') as f:
         return f.read()
 
-setup(name='master_password',
+setup(name='pympw',
       version='0.1',
       description=' An implementation of the Master Password algorithm v3 with a nice CLI',
-      url='http://github.com/roguh/master_password.py',
+      url='http://github.com/roguh/pympw',
       author='Hugo Rivera',
       author_email='flyingcircus@example.com',
       long_description=readme(),
@@ -21,11 +21,11 @@ setup(name='master_password',
           'Topic :: Internet',
       ],
       # TODO license=None,
-      packages=['master_password'],
+      packages=['pympw'],
       install_requires=[
           'scrypt', 'pyperclip'
       ],
-      scripts=['bin/mpw-cli.py'],
+      scripts=['bin/pympw'],
       setup_requires=["pytest-runner"],
       tests_require=["pytest"],
       zip_safe=False)

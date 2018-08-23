@@ -1,9 +1,6 @@
 from unittest import TestCase
 
-import master_password
-master_password.master_key('a','a')
-
-from master_password import master_key, site_password 
+from pympw import master_key, site_password 
 
 user = "USER"
 password = "PASSWORD"

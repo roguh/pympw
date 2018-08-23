@@ -10,7 +10,7 @@ import getpass
 import pyperclip
 # import colorama # TODO
 
-import master_password as mpw
+import pympw
 
 
 default_counter = 1
@@ -40,7 +40,7 @@ def main():
                         default=None, help='script will timeout and close after this many seconds')
     parser.add_argument( "--exit-command", type=str, default=None, help="run this command if the script times out")
     parser.add_argument('--type', type=str, default=default_type,
-                        choices=mpw.template_class_names, help='password type')
+                        choices=pympw.template_class_names, help='password type')
 
     # read site, counter, and type until quit
     args = parser.parse_args(sys.argv[1:])
@@ -61,19 +61,21 @@ def main():
             args.name = input(courtesy + 'full name > ')
 
         master_pw = getpass.getpass(courtesy + 'master password > ')
+
+        # precompute master key
+        key = pympw.master_key(args.name, master_pw)
+        # del master_pw
+        # del args.name
     except (EOFError, KeyboardInterrupt, ValueError) as e:
+        print(e)
         sys.exit(1)
 
-    # precompute master key
-    key = mpw.master_key(args.name, master_pw)
-    del master_pw
-    del args.name
 
     # print site password if site name was passed as argument
     if not args.site is None:
         verbose_print('site={}, type={}, counter={}'.format(args.site, 
                       args.type, args.counter))
-        print(mpw.site_password(args.site, key, args.type, args.counter))
+        print(pympw.site_password(key, args.site, args.type, args.counter))
         return
 
     # loop if no site name was given 
@@ -114,15 +116,14 @@ def main():
             parser.print_help()
             return default
         if x.lower() in quit_cmds:
-            quit = True 
+            raise EOFError # TODO hacky 
         return x if x != '' else default
     try:
         # run a loop that asks for site name, template class (aka password
         # type, and counter
         sb = args.splitby
-        quit = False
         password = None 
-        while not quit:
+        while True: 
             if not sb is None and len(sb) > 0 and not sb in ['\n']:
                 ins = get_input(courtesy + 'site name[{}type[{}counter]] > '.format(sb, sb))
                 # is this a request for help? 
@@ -130,7 +131,7 @@ def main():
                     parser.print_help()
                     ins = ''
                 if ins in quit_cmds:
-                    quit = True
+                    break 
                 # split input by the given split-by character 
                 ins = ins.split(sb)
                 site = ins[0] if len(ins) > 0 else ''
@@ -151,10 +152,15 @@ def main():
                 if counter < 1:
                     raise ValueError
             except ValueError:
-                verbose_print("please enter a positive integer")
+                verbose_print("please enter a positive counter")
+                continue
+            if _type not in pympw.template_classes:
+                verbose_print("please enter a valid template class/password type")
                 continue
 
-            password = mpw.site_password(site, key, _type, counter)
+            # print(site, key, _type, counter)
+            # print([type(v) for v in [site, key, _type, counter]])
+            password = pympw.site_password(key, site, _type, counter)
 
             # either print password or copy it to clipboard 
             if args.copy:
@@ -171,8 +177,8 @@ def main():
             subprocess.call(args.exit_command, shell=True)
     finally:
         print('bye')
-        del key
-        del password
+        # del key
+        # del password
 
 
 if __name__ == '__main__':
