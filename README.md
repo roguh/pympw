@@ -8,12 +8,12 @@ I faithfully implemented the [algorithm](http://www.masterpasswordapp.com/master
 
 ## **Features**
 
-- ✔ Faithful and concise implementation of Master Password v3 using standard Python crypto libraries scrypt, hmac, and digest.sha256 .
+- ✔ Faithful and concise implementation of Master Password v3 using standard Python crypto libraries **scrypt, hmac, and digest.sha256**.
 - ✔ Quick password generation for a single site.
-- ✔ Intuitive interactive session. Type your master password once and request site passwords as you go!
-- ✔ Copy passwords to your clipboard --- never print passwords out at all!
-- ✔ Interactive session can timeout after a few minutes to protect your privacy
-- ✔ Support for counter and all password template classes (maximum, long, medium, basic, short, PIN, name, and phrase)
+- ✔ Intuitive interactive session. *Type your master password once and request site passwords as you go!*
+- ✔ Copy passwords to your clipboard --- *never print passwords out at all!*
+- ✔ Interactive session can timeout after a few minutes to *protect your privacy*
+- ✔ Support for counter and *all* password template classes (maximum, long, medium, basic, short, PIN, name, and phrase)
 
 ## Installation
 
