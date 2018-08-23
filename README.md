@@ -9,11 +9,12 @@ I faithfully implemented the [algorithm](http://www.masterpasswordapp.com/master
 ## **Features**
 
 - ✔ Faithful and concise implementation of Master Password v3 using standard Python crypto libraries **scrypt, hmac, and digest.sha256**.
-- ✔ Quick password generation for a single site.
+- ✔ *Quick password generation* for a single site.
+- ✔ Generate long passwords, PINs, or even memorable phrases 
 - ✔ Intuitive interactive session. *Type your master password once and request site passwords as you go!*
 - ✔ Copy passwords to your clipboard --- *never print passwords out at all!*
 - ✔ Interactive session can timeout after a few minutes to *protect your privacy*
-- ✔ Support for counter and *all* password template classes (maximum, long, medium, basic, short, PIN, name, and phrase)
+- ✔ Support for counter and *all* MPv3 password template classes (maximum, long, medium, basic, short, PIN, name, and phrase)
 
 ## Installation
 
@@ -29,47 +30,12 @@ If you don't want pip to install dependencies, make sure to install the Python p
 
 ## CLI Usage
 
-### Options 
-
-```
-$ ./cli.py -h
-usage: cli.py [-h] [--name NAME] [--site SITE] [--counter COUNTER]
-              [--type {maximum,x,long,l,medium,m,basic,b,short,s,longbasic,lb,pin,#,name,n,phrase,ph}]
-              [--copy] [--hide-pw] [--splitby SPLITBY]
-              [--exit-after EXIT_AFTER] [--exit-command EXIT_COMMAND]
-              [--keepalive] [--quiet]
-
-CLI to Master Password algorithm v3. Passwords are generated locally, your
-master password is not sent to any server. http://masterpassword.app
-
-optional arguments:
-  -h, --help            show this help message and exit
-  --name NAME, -n NAME  your full name
-  --site SITE, -s SITE  site name (e.g. linux.org). omit this argument to
-                        start an interactive session.
-  --counter COUNTER, -c COUNTER
-                        positive integer less than 2**31=4294967296
-  --type {maximum,x,long,l,medium,m,basic,b,short,s,longbasic,lb,pin,#,name,n,phrase,ph}
-                        password type
-  --copy, -y            copy password to clipboard instead of printing it
-  --hide-pw, -d         never print passwords
-  --splitby SPLITBY, -b SPLITBY
-                        more efficient interactive session. suggested values:
-                        tab, space, or '/'
-  --exit-after EXIT_AFTER, -e EXIT_AFTER
-                        script will timeout and close after this many seconds
-  --exit-command EXIT_COMMAND
-                        run this command if the script times out
-  --keepalive, -k       keep program from timing out by pressing ENTER
-  --quiet, -q           less output
-```
-
 ### Single site password with one command
 
 Generate a password with a single command
 
 ```
-$ python3 cli.py -n USER --type long -s google.com -c 20000
+$ python3 mpw-cli.py -n USER --type long -s google.com -c 20000
 please type your master password >
 site=google.com, type=long, counter=20000
 Vode7.QojfDeqa
@@ -80,7 +46,7 @@ Vode7.QojfDeqa
 Enter interactive mode by omitting the `--site` argument. Type `CTRL-D` or `quit` to quit.
 
 ```
- $ ./cli.py -n USER
+ $ mpw-cli.py -n USER
 please type your master password >
 please type site name > google.com
 please type counter or ENTER for default=1 > 20000
@@ -95,7 +61,7 @@ bye
 Enter alternative interactive mode
 
 ```
- $ python3 cli.py -n USER -b/
+ $ python3 mpw-cli.py -n USER -b/
 please type your master password >
 please type site name[/type[/counter]] > google.com
 Kasi2/FipsHonm
@@ -114,7 +80,7 @@ bye
 Use `--copy` to copy password to clipboard.
 
 ```
-$ ./cli.py -n USER --copy --type x
+$ mpw-cli.py -n USER --copy --type x
 please type your master password >
 please type site name > github.com
 please type counter or ENTER for default=1 >
@@ -127,7 +93,7 @@ Use `--quiet` to print less output.
 Use `--keepalive` to reschedule timeout if you're still using the program.
 
 ```
-$ ./cli.py --name USER --type maximum --quiet --copy --splitby / \
+$ mpw-cli.py --name USER --type maximum --quiet --copy --splitby / \
     --keepalive --exit-after "$((60 * 5))" \
     --exit-command 'notify-send "MasterPassword is now closed"'
 master password >
@@ -138,6 +104,41 @@ i%&yc(sRV7VJqOQK%G0~
 site name[/type[/counter]] > 300 second timeout reached
 bye
 ```
+
+### All options 
+
+```
+$ mpw-cli.py -h
+usage: mpw-cli.py [-h] [--name NAME] [--site SITE] [--counter COUNTER] [--quiet]
+                  [--copy] [--hide-pw] [--splitby SPLITBY] [--keepalive]
+                  [--exit-after EXIT_AFTER] [--exit-command EXIT_COMMAND]
+                  [--type {maximum,x,long,l,medium,m,basic,b,short,s,longbasic,lb,pin,#,name,n,phrase,ph}]
+
+CLI to Master Password algorithm v3. Passwords are generated locally, your
+master password is not sent to any server. http://masterpassword.app
+
+optional arguments:
+ -h, --help            show this help message and exit
+ --name NAME, -n NAME  your full name
+ --site SITE, -s SITE  site name (e.g. linux.org). omit this argument to
+                       start an interactive session.
+ --counter COUNTER, -c COUNTER
+                       positive integer less than 2**31=4294967296
+ --type {maximum,x,long,l,medium,m,basic,b,short,s,longbasic,lb,pin,#,name,n,phrase,ph}
+                       password type
+ --copy, -y            copy password to clipboard instead of printing it
+ --hide-pw, -d         never print passwords
+ --splitby SPLITBY, -b SPLITBY
+                       more efficient interactive session. suggested values:
+                       tab, space, or '/'
+ --exit-after EXIT_AFTER, -e EXIT_AFTER
+                       script will timeout and close after this many seconds
+ --exit-command EXIT_COMMAND
+                       run this command if the script times out
+ --keepalive, -k       keep program from timing out by pressing ENTER
+ --quiet, -q           less output
+```
+
 
 ## Library Usage
 
