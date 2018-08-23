@@ -35,7 +35,7 @@ If you don't want pip to install dependencies, make sure to install the Python p
 Generate a password with a single command
 
 ```
-$ python3 pympw -n USER --type long -s google.com -c 20000
+$ python3 bin/pympw -n USER --type long -s google.com -c 20000
 please type your master password >
 site=google.com, type=long, counter=20000
 Vode7.QojfDeqa
@@ -86,6 +86,7 @@ please type site name > github.com
 please type counter or ENTER for default=1 >
 please type type or ENTER for default=x >
 password copied to clipboard
+E(%MMCBruYhaPEV6bM7^
 ```
 
 Use `--exit-after` to shutdown interactive mode after some number of seconds.
@@ -174,6 +175,7 @@ Generate a master key (>1sec)
 
 ```
 > master_key = master_key(b'USER', b'PASSWORD')
+b'\xc8\xf2\xc7\xd3<(\x05\xaf\xf8ng\xfb\xb2\x06\xab6\x83\xfc\x85m\xcb\xa3$c\xb7\xc6I\x93\x01\xc7\xeb+\x810\xb2\xf2\x84\xa3f\xb7\xf0R\x9c_\xf1\xb3b\xa2\x99\xcb\xd3\x97`\xab_\xef\x89\xe6S\xe7\x84LM\xee'
 ```
 
 Generate a password
