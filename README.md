@@ -1,4 +1,4 @@
-# pympw: Master Password --- An Algorithm for Freedom
+# pympw: CLI and Implementation of Master Password v3 --- An Algorithm for Freedom
 
 Master Password is a determnistic password generator.
 This is a Python implementation of the Master Password algorithm v3 based on 
@@ -17,6 +17,12 @@ I faithfully implemented the [algorithm](http://www.masterpasswordapp.com/master
 - ✔ Support for counter and *all* MPv3 password template classes (maximum, long, medium, basic, short, PIN, name, and phrase)
 
 ## Installation
+
+Install `pympw` through PyPI or locally.
+
+```
+$ pip install pympw
+```
 
 ```
 git clone --depth=1 https://github.com/roguh/pympw
