@@ -98,12 +98,14 @@ def main():
     courtesy = '' if args.quiet else 'please type your '
     try:
         verbose_print(FORE + BACK + "Welcome to Master Password")
+        ask_name = False
         if args.name is None:
+            ask_name = True
             args.name = input(input_format(
                 FORE + BACK + courtesy + 'full name'))
 
         master_pw = getpass.getpass(input_format(
-            FORE2 + BACK + courtesy + 'password '))
+            FORE2 + BACK + courtesy + 'password' + (' ' if ask_name else '')))
 
         # precompute master key
         key = pympw.master_key(args.name, master_pw)
