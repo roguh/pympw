@@ -147,6 +147,24 @@ optional arguments:
 ```
 
 
+## Bash Autocompletion
+
+If you have `pympw` in your path and you have BASH, run the following command
+to get autocompletion.
+
+```
+$ eval "$(register-python-argcomplete pympw)
+```
+
+If you have tcsh, run
+
+```
+eval `register-python-argcomplete --shell tcsh pympw`
+```
+
+This script also supports argcomplete's global completion mode.
+See the [argcomplete docs](https://argcomplete.readthedocs.io/en/latest/) for how to enable it.
+
 ## Library Usage
 
 ```
