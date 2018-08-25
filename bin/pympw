@@ -169,7 +169,7 @@ def main():
         while True:
             if not sb is None and len(sb) > 0 and not sb in ['\n']:
                 ins = get_input(
-                    courtesy + 'site name[{}type[{}counter]] > '.format(sb, sb))
+                    courtesy + 'site name[{}type[{}counter]]'.format(sb, sb))
                 # is this a request for help?
                 if ins in help_cmds:
                     parser.print_help()
