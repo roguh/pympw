@@ -5,7 +5,7 @@ def readme():
         return f.read()
 
 setup(name='pympw',
-      version='0.2',
+      version='0.2.1',
       description=' An implementation of the Master Password algorithm v3 with a nice CLI',
       url='http://github.com/roguh/pympw',
       author='Hugo Rivera',
