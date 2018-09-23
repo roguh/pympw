@@ -54,7 +54,7 @@ def input_format(s):
 
 
 def splitby_completer(**kwargs):
-    return ' :/\,.-' 
+    return ' :/\\,.-'
 
 
 def read(fname):
@@ -66,34 +66,38 @@ def read(fname):
         if type(conf) != list or (len(conf) > 0 and type(conf[0]) != str):
             raise Exception("failed to parse JSON")
         return conf
-    except e:
+    except Exception:
         return []
 
 
 def site_completer(prefix, a, p, parsed_args):
-    return ["reddit.com", "xkcd.org"] + read(parsed_args.store_file) 
+    return ["reddit.com", "xkcd.org"] + read(parsed_args.store_file)
 
-    return [s for s in read(parsed_args.store_file) \
+    return [s for s in read(parsed_args.store_file)
             if s.lower().startswith(prefix.lower())]
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description='CLI to Master Password algorithm v3. Passwords are generated locally, your master password is not sent to any server. http://masterpassword.app')
+        description='CLI to Master Password algorithm v3. ' +
+        'Passwords are generated locally, your master password is not sent ' +
+        'to any server. http://masterpassword.app')
     parser.add_argument('--name', '-n', type=str, default=None,
                         help='your full name')
     parser.add_argument('--site', '-s', type=str, default=None,
-                        help='site name (e.g. linux.org). omit this argument to start an interactive session.'
+                        help='site name (e.g. linux.org). omit this ' +
+                        'argument to start an interactive session.'
                         ).completer = site_completer
     parser.add_argument('--counter', '-c', type=int, default=default_counter,
                         help='positive integer less than 2**31=4294967296')
     types = pympw.template_class_names
-    parser.add_argument('--type', '-t', metavar='TYPE', type=str, 
+    parser.add_argument('--type', '-t', metavar='TYPE', type=str,
                         default=default_type, choices=types,
                         help='password type, one of ' + ', '.join(types))
 
     parser.add_argument('--store-time', type=int, default=30,
-                        help='clear clipboard after this many seconds. only applicable when --copy is passed')
+                        help='clear clipboard after this many seconds. ' +
+                        'only applicable when --copy is passed')
 
     parser.add_argument("--quiet", "-q", action="store_true",
                         help="less output")
@@ -104,20 +108,22 @@ def main():
     parser.add_argument('--hide-pw', '-d', action='store_true',
                         help='never print passwords')
     parser.add_argument('--splitby', '-b', metavar='CHAR', type=str, default=None,
-                        help="more efficient interactive session. suggested values: tab, space, or '/'"
+                        help="more efficient interactive session. " +
+                        "suggested values: tab, space, or '/'"
                         ).completer = splitby_completer
     parser.add_argument("--keepalive", "-k", action="store_true",
                         help="keep program from timing out by pressing ENTER")
     parser.add_argument('--exit-after', '-e', metavar='T', type=int,
-                        default=None, help='script will timeout and close after this many seconds')
+                        default=None, help='script will timeout and close ' +
+                        'after this many seconds')
     parser.add_argument("--exit-command", metavar='COMMAND', type=str,
-                        default=None, help="run this command if the script times out")
+                        default=None, help='run this command if the script ' +
+                        'times out')
     parser.add_argument('--no-color', "--strip-ansi", action='store_true',
                         help="suppress colored output in interactive session")
 
-
     # read site, counter, and type until quit
-    if not argcomplete is None:
+    if argcomplete is not None:
         argcomplete.autocomplete(parser)
     args = parser.parse_args(sys.argv[1:])
 
@@ -127,19 +133,17 @@ def main():
     if args.verbose:
         args.quiet = False
 
-
     def verbose_print(*_args, **kwargs):
         if not args.quiet:
             print(*_args, **kwargs)
-
 
     def output_password(key, site, _type, counter, clear_thread=None):
         password = pympw.site_password(key, site, _type, counter)
 
         if args.verbose:
             verbose_print(DIM + 'site={}, type={}, counter={}'.format(
-                          site, _type, counter)) 
-    
+                          site, _type, counter))
+
         # either print password or copy it to clipboard
         if args.copy:
             if pyperclip is None:
@@ -147,7 +151,7 @@ def main():
             else:
                 try:
                     copy_to_clipboard(password)
-                    if clear_thread != None:
+                    if clear_thread is not None:
                         clear_thread.cancel()
                     t = threading.Timer(args.store_time, clear_clipboard)
                     t.start()
@@ -161,7 +165,6 @@ def main():
         if not args.hide_pw:
             print(password)
 
-
     # read Name if not passed as argument
     # read password without echo
     courtesy = '' if args.quiet else 'please type your '
@@ -173,7 +176,8 @@ def main():
                 FORE + BACK + courtesy + 'full name'))
 
         master_pw = getpass.getpass(input_format(
-            FORE2 + BACK + courtesy + 'password' + (' ' if ask_name or not args.quiet else '')))
+            FORE2 + BACK + courtesy + 'password' +
+            (' ' if ask_name or not args.quiet else '')))
 
         # precompute master key
         key = pympw.master_key(args.name, master_pw)
@@ -187,12 +191,12 @@ def main():
         sys.exit(1)
 
     # print site password if site name was passed as argument
-    if not args.site is None:
+    if args.site is not None:
         output_password(key, args.site, args.type, args.counter)
         return
 
     # loop if no site name was given
-    if not args.exit_after is None:
+    if args.exit_after is not None:
         # schedule an ALARM signal to exit the program once args.exit_after seconds pass
         # if keepalive is enabled, another ALARM signal is scheduled
         handler_params = {
@@ -206,7 +210,8 @@ def main():
 
             def active_since(t): return now() - (1 + active) < t
             next_delay = max(1, round(active - scheduled))
-            # print('ALARM!', now() - active, active_since(args.exit_after), active, next_delay, active - scheduled)
+            # print('ALARM!', now() - active, active_since(args.exit_after),
+            #       active, next_delay, active - scheduled)
             if not active_since(args.exit_after):
                 raise InterruptedError
             else:
@@ -233,10 +238,9 @@ def main():
             raise EOFError  # TODO hacky
         return x if x != '' else default
 
-
     def get_params():
         sb = args.splitby
-        if not sb is None and len(sb) > 0 and not sb in ['\n']:
+        if sb is not None and len(sb) > 0 and sb not in ['\n']:
             ins = get_input(
                 courtesy + 'site name[{}type[{}counter]]'.format(sb, sb))
             # is this a request for help?
@@ -281,16 +285,18 @@ def main():
                 continue
 
             if _type not in pympw.template_classes:
-                verbose_print("please enter a valid template class/password type")
+                verbose_print(
+                    "please enter a valid template class/password type")
                 continue
 
-            clear_thread = output_password(key, site, _type, counter, clear_thread)
+            clear_thread = output_password(
+                key, site, _type, counter, clear_thread)
     except (EOFError, KeyboardInterrupt):
         pass
     except InterruptedError:
         # run command after timeout
         verbose_print(args.exit_after, 'second timeout reached')
-        if not args.exit_command is None:
+        if args.exit_command is not None:
             subprocess.call(args.exit_command, shell=True)
     finally:
         if hasattr(clear_thread, 'cancel'):
