@@ -6,10 +6,11 @@ How to use:
 2. View available password templates in template_classes
 3. Pass key, site name, counter, and password template class to site_password()
 """
-import scrypt
 import hmac
 import hashlib
 import struct
+
+import scrypt
 # TODO implement MP algorithm v0 v1 v2
 
 # Only use authentication scope

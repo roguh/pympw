@@ -30,9 +30,9 @@ except ImportError:
     colorama = None
 
 
-escape_codes = (0, 1, 2, 94, 47, 91)
+ESCAPE_CODES = (0, 1, 2, 94, 47, 91)
 RESET, BRIGHT, DIM, FORE, BACK, FORE2 = [
-    '' if colorama is None else '\x1b[{}m'.format(n) for n in escape_codes]
+    '' if colorama is None else '\x1b[{}m'.format(n) for n in ESCAPE_CODES]
 
 
 default_counter = 1
@@ -53,7 +53,7 @@ def input_format(s):
     return BRIGHT + s + RESET + BRIGHT + ' >' + RESET + ' '
 
 
-def splitby_completer(**kwargs):
+def splitby_completer(**_):
     return ' :/\\,.-'
 
 
@@ -71,10 +71,13 @@ def read(fname):
 
 
 def site_completer(prefix, a, p, parsed_args):
+    return
+    """
     return ["reddit.com", "xkcd.org"] + read(parsed_args.store_file)
 
     return [s for s in read(parsed_args.store_file)
             if s.lower().startswith(prefix.lower())]
+    """
 
 
 def main():
@@ -104,12 +107,12 @@ def main():
     parser.add_argument("--verbose", "-v", action="store_true",
                         help="more output. disables --quiet")
     parser.add_argument('--copy', '-y', action='store_true',
-                        help='copy password to clipboard instead of printing it')
+                        help='copy password to clipboard')
     parser.add_argument('--hide-pw', '-d', action='store_true',
                         help='never print passwords')
-    parser.add_argument('--splitby', '-b', metavar='CHAR', type=str, default=None,
-                        help="more efficient interactive session. " +
-                        "suggested values: tab, space, or '/'"
+    parser.add_argument('--splitby', '-b', metavar='CHAR', type=str,
+                        default=None, help="more efficient interactive " +
+                        "session. suggested values: tab, space, or '/'"
                         ).completer = splitby_completer
     parser.add_argument("--keepalive", "-k", action="store_true",
                         help="keep program from timing out by pressing ENTER")
@@ -197,8 +200,9 @@ def main():
 
     # loop if no site name was given
     if args.exit_after is not None:
-        # schedule an ALARM signal to exit the program once args.exit_after seconds pass
-        # if keepalive is enabled, another ALARM signal is scheduled
+        # schedule an ALARM signal to exit the program once args.exit_after
+        # seconds pass if keepalive is enabled, another ALARM signal is
+        # scheduled
         handler_params = {
             "active": now(),
             "scheduled": now()
@@ -230,7 +234,8 @@ def main():
 
     def get_param(name, default):
         x = get_input(courtesy + name + ('' if default ==
-                                         '' else ' or ENTER for default=' + str(default)))
+                                         '' else ' or ENTER for default=' +
+                                         str(default)))
         if x.lower() in help_cmds:
             parser.print_help()
             return default
