@@ -100,7 +100,7 @@ template_class_names = sum([[k, v] for k, v in synonyms.items()], [])
 
 
 def int2bytes(n):
-    """Convert a positive 4 byte integer into a big-endian 4-byte array"""
+    """Convert a positive 4 byte integer into a big-endian 4-byte array."""
     if n < 1 or n > 4294967295:
         raise ValueError("can only convert positive integers to 4-byte array")
     # big-endian integer
@@ -109,12 +109,12 @@ def int2bytes(n):
 
 
 def len2bytes(s):
-    """Convert the length of a string into a big-endian 4-byte array"""
+    """Convert the length of a string into a big-endian 4-byte array."""
     return int2bytes(len(s))
 
 
 def master_key(name, master_pw, scope=scope, N=N, r=r, p=p, dk_len=dk_len, enc="utf8"):
-    """Time and memory intensive. Generate master key from name and password"""
+    """Time and memory intensive. Generate master key from name and password."""
     if len(name) == 0:
         raise ValueError("name should not have length 0")
 
@@ -132,7 +132,7 @@ def master_key(name, master_pw, scope=scope, N=N, r=r, p=p, dk_len=dk_len, enc="
 
 
 def site_key(master_key, site_name, counter=1, enc="utf8", scope=scope):
-    """Quickly generate a site key using password, site name, and parameters"""
+    """Quickly generate a site key using password, site name, and parameters."""
     if type(site_name) is str:
         site_name = bytes(site_name, enc)
 
@@ -141,7 +141,7 @@ def site_key(master_key, site_name, counter=1, enc="utf8", scope=scope):
 
 
 def site_password(master_key, site_name, template_class="long", counter=1):
-    """Quickly generates a password for a site"""
+    """Quickly generates a password for a site."""
 
     # Use the site key to generate a password of a given template class
     seed = site_key(master_key, site_name, counter)
